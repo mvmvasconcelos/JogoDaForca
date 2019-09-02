@@ -22,23 +22,50 @@ public class JanelaPrincipal extends javax.swing.JFrame {
 
     Controlador controlador = new Controlador();
     boolean novoJogo = true;
-    ArrayList<ImageIcon> imagensForca = new ArrayList<>();  
+    ArrayList<ImageIcon> imagensForca = new ArrayList<>();
+            
     
     
     public JanelaPrincipal() {
         initComponents();
         configuraPainelAlfabeto();
         desativaBotoes();
-        
+        acoesBtnNovoJogo(1);
         //Armazena as imagens da forca em uma lista
         for (int i = 0; i <= 7; i++) {
             imagensForca.add(new javax.swing.ImageIcon(getClass().getResource("/recursos/f" + i + ".gif")));            
         }
     }
+    
+    /**Método criado na última hora só para adicionar e remover os inputs de salvar e novo jogo
+     * 
+     * @param i - inteiro 1, 2 ou 3
+     */
+    private void acoesBtnNovoJogo(int i){
+        switch(i){
+            case 1:
+                btnNovoJogo.setBounds(btnGuardarPalavra.getX(), btnGuardarPalavra.getY(), 250, btnGuardarPalavra.getHeight());
+                btnNovoJogo.setPreferredSize(new Dimension(250, btnGuardarPalavra.getHeight()));
+                btnNovoJogo.setVisible(false);
+                break;
+            case 2:    
+                btnNovoJogo.setVisible(false);
+                lblDigiteSecreta.setVisible(true);
+                txtPalavraSecreta.setVisible(true);
+                btnGuardarPalavra.setVisible(true);
+                break;
+            case 3:
+                btnNovoJogo.setVisible(true);
+                lblDigiteSecreta.setVisible(false);
+                txtPalavraSecreta.setVisible(false);
+                btnGuardarPalavra.setVisible(false);                
+                break;
+        }
+    }
         
     private boolean validaPalavra(String palavra){
         if (!palavra.matches("[A-Z]+")) {
-            JOptionPane.showMessageDialog(this, "Não use acentos, espaços ou números");
+            JOptionPane.showMessageDialog(this, "Não use caracteres especiais, acentos, espaços ou números");
             return false;
         } else if (palavra.length() > 17){
             JOptionPane.showMessageDialog(this, "A palavra não deve conter mais do que 17 letras");            
@@ -54,7 +81,8 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     private void salvarPalavraSecreta(){
         //Se validar
         String palavra = txtPalavraSecreta.getText().toUpperCase(); 
-        if (validaPalavra(palavra)) {            
+        if (validaPalavra(palavra)) {
+            acoesBtnNovoJogo(3);
             ativaBotoes();
             //Armazena a palavra secreta
             controlador.forca.setPalavraSecreta(palavra);
@@ -104,6 +132,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
                     //Exibe imagem de vitória e o texto
                     lblImagem.setIcon(imagensForca.get(7));
                     lblFimDeJogo.setText("Você ganhou!");
+                    desativaBotoes();
                 } else {                    
                     controlador.forca.aumentaQtdeErrosCometidos();
                     if (controlador.forca.getQtdeErrosCometidos() >= controlador.forca.getLimiteTentativas()) {
@@ -114,7 +143,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
                     controlador.aumentaNumeroImagemAtualDaForca();
                     lblImagem.setIcon(imagensForca.get(controlador.getNumeroImagemAtualDaForca()));
                 }
-
+                //Desabilita o botão pressionado
                 botaoLetra.setEnabled(false);
             });
         }
@@ -148,12 +177,13 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         lblTitulo = new javax.swing.JLabel();
         lblPalavra = new javax.swing.JLabel();
-        lblDigiteSecreta = new javax.swing.JLabel();
-        txtPalavraSecreta = new javax.swing.JTextField();
-        btnGuardarPalavra = new javax.swing.JButton();
         painelLetras = new javax.swing.JPanel();
         lblImagem = new javax.swing.JLabel();
         lblFimDeJogo = new javax.swing.JLabel();
+        lblDigiteSecreta = new javax.swing.JLabel();
+        txtPalavraSecreta = new javax.swing.JTextField();
+        btnGuardarPalavra = new javax.swing.JButton();
+        btnNovoJogo = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -170,15 +200,6 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         lblPalavra.setText("D I G I T E  U M A  P A L A V R A");
         lblPalavra.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        lblDigiteSecreta.setText("Digite a palavra secreta:");
-
-        btnGuardarPalavra.setText("Guardar");
-        btnGuardarPalavra.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGuardarPalavraActionPerformed(evt);
-            }
-        });
-
         painelLetras.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         painelLetras.setPreferredSize(new java.awt.Dimension(240, 280));
 
@@ -186,11 +207,11 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         painelLetras.setLayout(painelLetrasLayout);
         painelLetrasLayout.setHorizontalGroup(
             painelLetrasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 236, Short.MAX_VALUE)
+            .addGap(0, 246, Short.MAX_VALUE)
         );
         painelLetrasLayout.setVerticalGroup(
             painelLetrasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 276, Short.MAX_VALUE)
         );
 
         lblImagem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recursos/f0.gif"))); // NOI18N
@@ -201,82 +222,95 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         lblFimDeJogo.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         lblFimDeJogo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
+        lblDigiteSecreta.setText("Digite a palavra secreta:");
+
+        btnGuardarPalavra.setText("Guardar");
+        btnGuardarPalavra.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarPalavraActionPerformed(evt);
+            }
+        });
+
+        btnNovoJogo.setText("Novo Jogo");
+        btnNovoJogo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNovoJogoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(350, 350, 350))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(lblDigiteSecreta)
-                                .addGap(18, 18, 18)
-                                .addComponent(txtPalavraSecreta)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnGuardarPalavra, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(lblPalavra, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                        .addGap(62, 62, 62)
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(lblImagem, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
-                                            .addComponent(lblFimDeJogo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(painelLetras, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(lblDigiteSecreta)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtPalavraSecreta))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(146, 146, 146)
-                        .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblPalavra, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                        .addGap(72, 72, 72)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lblImagem, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
+                            .addComponent(lblFimDeJogo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(painelLetras, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(btnGuardarPalavra, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnNovoJogo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGap(182, 182, 182))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
                 .addComponent(lblTitulo)
-                .addGap(18, 18, 18)
+                .addGap(2, 2, 2)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblDigiteSecreta)
                     .addComponent(txtPalavraSecreta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnGuardarPalavra))
-                .addGap(1, 1, 1)
+                    .addComponent(btnGuardarPalavra)
+                    .addComponent(btnNovoJogo))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(190, 190, 190)
+                                .addComponent(lblFimDeJogo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(lblImagem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(painelLetras, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(29, 29, 29)
-                        .addComponent(lblImagem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblFimDeJogo, javax.swing.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblPalavra, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(lblPalavra, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(painelLetras, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(22, 22, 22))
         );
-
-        lblImagem.getAccessibleContext().setAccessibleName("");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 640, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 620, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 620, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 423, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -286,6 +320,10 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     private void btnGuardarPalavraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarPalavraActionPerformed
         salvarPalavraSecreta();
     }//GEN-LAST:event_btnGuardarPalavraActionPerformed
+
+    private void btnNovoJogoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoJogoActionPerformed
+        acoesBtnNovoJogo(2);
+    }//GEN-LAST:event_btnNovoJogoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -324,6 +362,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGuardarPalavra;
+    private javax.swing.JButton btnNovoJogo;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblDigiteSecreta;
     private javax.swing.JLabel lblFimDeJogo;

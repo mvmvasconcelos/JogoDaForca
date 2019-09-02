@@ -71,7 +71,6 @@ public class Controlador {
         //Já que se não houver a letra digitada na palavra, ele vai retornar -1
         if (!listaPosicaoDasLetras.isEmpty() && listaPosicaoDasLetras.get(0) >= 0 ) {
             revelaLetra(listaPosicaoDasLetras);
-            System.out.println("letras adivinhadas " + forca.getQtdeLetrasAdivinhadas());
             //System.out.println("Tem na palavra!");
             return true;
         } else {

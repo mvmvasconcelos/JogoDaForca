@@ -119,22 +119,22 @@ public class JanelaPrincipal extends javax.swing.JFrame {
             //Adiciona botão ao painel
             painelLetras.add(botaoLetra);  
             }
-
+            
             //Adiciona listener para cada botão de letra
             botaoLetra.addActionListener((arg0) -> {
-                //Se a letra pressionada está certa e ainda faltam letras a serem adivinhadas
+                //Se a letra pressionada está certa e ainda faltam letras a serem adivinhadas                    
                 if (controlador.letraClicada(letra.charAt(0)) && controlador.forca.getQtdeLetrasAdivinhadas() < controlador.forca.getPalavraSecreta().length()) {
                     //Altera o texto do label com a palavra espaçada atualizada
-                    lblPalavra.setText(controlador.espacadorLetras(controlador.forca.getPalavraSendoAdivinhada()));                    
-                } else if(controlador.letraClicada(letra.charAt(0))){
+                    lblPalavra.setText(controlador.espacadorLetras(controlador.forca.getPalavraSendoAdivinhada()));                   
+                } else if(controlador.letraClicada(letra.charAt(0))){                    
                     //Altera o texto do label com a palavra espaçada atualizada
                     lblPalavra.setText(controlador.espacadorLetras(controlador.forca.getPalavraSendoAdivinhada()));
                     //Exibe imagem de vitória e o texto
                     lblImagem.setIcon(imagensForca.get(7));
-                    lblFimDeJogo.setText("Você ganhou!");
+                    lblFimDeJogo.setText("Você ganhou!");                    
                     desativaBotoes();
                 } else {                    
-                    controlador.forca.aumentaQtdeErrosCometidos();
+                    controlador.forca.aumentaQtdeErrosCometidos();                    
                     if (controlador.forca.getQtdeErrosCometidos() >= controlador.forca.getLimiteTentativas()) {
                         lblFimDeJogo.setText("Você perdeu.");
                         lblPalavra.setText("A palavra era: " + controlador.forca.getPalavraSecreta());
@@ -186,6 +186,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         btnNovoJogo = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Jogo da Forca");
         setResizable(false);
 
         jPanel1.setMaximumSize(new java.awt.Dimension(800, 400));
